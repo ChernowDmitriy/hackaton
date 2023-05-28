@@ -7,8 +7,7 @@ class Settings(BaseModel):
     PROJECT_VERSION: str = '1.0'
 
     # MongoDB
-    POSTGRES_URL: str = 'postgresql+asyncpg://postgres:postgres@localhost/hackaton'
-    SYNC_POSTGRES_URL: str = 'postgresql+psycopg2://postgres:postgres@localhost/hackaton'
+    POSTGRES_URL: str = 'postgresql+asyncpg://postgres:postgres@db/hackaton'
     POSTGRES_DATABASE_NAME: str = 'auth'
 
     # Security

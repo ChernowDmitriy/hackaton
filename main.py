@@ -13,8 +13,3 @@ async def create_table():
     async with engine.begin() as conn:
         await conn.run_sync(BaseModel.metadata.create_all)
 
-
-async def main():
-    await create_table()
-
-asyncio.run(main())

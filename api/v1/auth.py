@@ -1,7 +1,6 @@
 from datetime import timedelta, datetime
 
 from fastapi import APIRouter, Depends
-from fastapi.security import HTTPAuthorizationCredentials
 
 from core.domains.DTO.token import Token, UpdateTokensSchemaInput
 from core.domains.DTO.user import AuthUserSchemaInput, CreateUserSchemaInput
