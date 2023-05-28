@@ -6,9 +6,8 @@ class Settings(BaseModel):
     PROJECT_TITLE: str = 'Hackaton'
     PROJECT_VERSION: str = '1.0'
 
-    # MongoDB
+    # Postgres DB
     POSTGRES_URL: str = 'postgresql+asyncpg://postgres:postgres@db/hackaton'
-    POSTGRES_DATABASE_NAME: str = 'auth'
 
     # Security
     SECRET_KEY: str = '123456'
