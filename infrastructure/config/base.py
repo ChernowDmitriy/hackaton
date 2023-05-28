@@ -23,7 +23,7 @@ class Settings(BaseModel):
     PASSWORD_MIN_LENGTH: int = 8
 
     class Config:
-        env_file = '.env'
+        env_file = '../../.env'
         env_file_encoding = 'utf-8'
 
 
