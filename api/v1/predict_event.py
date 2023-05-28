@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("/predict_events")
 async def predict_events(
-        # user: User = Depends(get_current_user),
+        user: User = Depends(get_current_user),
         predict_event_repo: PredictEventRepository = Depends(get_predict_event_repository)
 ) -> PredictEventSchemaOutput:
     result = await predict_event_repo.get_list_events()
