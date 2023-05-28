@@ -14,7 +14,7 @@ settings = get_settings()
 
 BaseModel = declarative_base()
 
-engine = create_async_engine(settings.POSTGRES_URL, echo=True)
+engine = create_async_engine(settings.POSTGRES_URL)
 
 async_session = sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
