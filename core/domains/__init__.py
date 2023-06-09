@@ -6,3 +6,5 @@ from .models.predicted_event import PredictedEvent
 from .models.predicted_major_repairs import PredictedMajorRepairs
 from .models.work_type_overhaul_buildings_apartment import WorkTypeOverhaulBuildingApartment
 from .models.user import User
+from .models.area import Area
+from .models.distict import District

@@ -2,22 +2,24 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from core.domains import PredictedEvent as PredictedEventModel, ApartmentBuildingsWithTEC
-from core.domains.DTO.predict_event import PredictEventSchemaOutput
-from core.filtering.predict_event_filter import PredictEventFiltering
+from core.domains import MajorRepairsApartmentBuilding as MajorRepairsApartmentBuildingModel, ApartmentBuildingsWithTEC
+from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairs
+from core.filtering.predict_event_filter import PredictMajorRepairsFiltering
 
 
-class PredictEventRepository:
+class PredictedMajorRepairsRepository:
     def __init__(self, session: AsyncSession):
         self._session = session
 
-    async def get_list_events(self, filtering_fields: PredictEventFiltering):
-        query = select(PredictedEventModel).options(selectinload(PredictedEventModel.unom)).join(
-            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.unom)
+    async def get_list_major_repairs(self, filtering_fields: PredictMajorRepairsFiltering):
+        query = select(
+            MajorRepairsApartmentBuildingModel
+        ).options(selectinload(MajorRepairsApartmentBuildingModel.unom)).join(
+            ApartmentBuildingsWithTEC, MajorRepairsApartmentBuildingModel.unom_id == ApartmentBuildingsWithTEC.unom)
 
         if filtering_fields.dict(exclude_none=True):
             if filtering_fields.unom:
-                query = query.where(PredictedEventModel.unom_id == filtering_fields.unom)
+                query = query.where(MajorRepairsApartmentBuildingModel.unom_id == filtering_fields.unom)
 
             if filtering_fields.type:
                 query = query.where()
@@ -32,8 +34,8 @@ class PredictEventRepository:
                 cleft = int(filtering_fields.start_expected_duration)
                 cright = int(filtering_fields.end_expected_duration)
                 query = query.where(
-                    (PredictedEventModel.expected_duration >= cleft) &
-                    (PredictedEventModel.expected_duration <= cright)
+                    (MajorRepairsApartmentBuildingModel.expected_duration >= cleft) &
+                    (MajorRepairsApartmentBuildingModel.expected_duration <= cright)
                 )
 
             if filtering_fields.area:
@@ -62,7 +64,7 @@ class PredictEventRepository:
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
         if predict_record:
-            response = PredictEventSchemaOutput(
+            response = PredictedMajorRepairs(
                 unom=predict_record[0].unom_id,
                 # type=predict_record
                 date=predict_record[0].expected_date,
