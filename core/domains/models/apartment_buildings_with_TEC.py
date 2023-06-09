@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+from sqlalchemy.orm import relationship
 
 from infrastructure.database import ORMBaseModel
 
@@ -46,3 +47,6 @@ class ApartmentBuildingsWithTEC(ORMBaseModel):
     col_3363 = sa.Column(sa.SmallInteger, nullable=True)
     col_3468 = sa.Column(sa.String)
     col_103506 = sa.Column(sa.String)
+
+    district_id = sa.Column(sa.Integer, sa.ForeignKey('districs.id'))
+    district = relationship('District', backref='ApartmentBuildingsWithTEC')
