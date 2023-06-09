@@ -4,15 +4,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.repositories.predict_event_repository import PredictEventRepository
 from core.repositories.user_repository import UserRepository
 from core.services.auth_service import AuthService
-from infrastructure.database import _async_scoped_session, async_session
+from infrastructure.database import async_session
 
-
-# async def get_db():
-#     return _async_scoped_session()
 
 async def get_db() -> AsyncSession:
     async with async_session() as session:
-        yield session
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+        finally:
+            await session.close()
 
 
 async def get_user_repository(db: AsyncSession = Depends(get_db)) -> UserRepository:

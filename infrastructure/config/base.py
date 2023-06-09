@@ -7,7 +7,7 @@ class Settings(BaseModel):
     PROJECT_VERSION: str = '1.0'
 
     # Postgres DB
-    POSTGRES_URL: str = 'postgresql+asyncpg://postgres:postgres@db/hackaton'
+    POSTGRES_URL: str = 'postgresql+asyncpg://postgres:postgres@45.9.27.251:5440/hackaton'
 
     # Security
     SECRET_KEY: str = '123456'
