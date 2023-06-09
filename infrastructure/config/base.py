@@ -12,7 +12,7 @@ class Settings(BaseModel):
     # Security
     SECRET_KEY: str = '123456'
     HASHING_ALGORITHM: str = 'HS256'
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 5  # 5 min
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 90  # 5 min
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 90  # 90 days
     JWT_SECRET: str = '123456'
 

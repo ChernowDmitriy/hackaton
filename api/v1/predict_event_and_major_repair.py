@@ -6,9 +6,11 @@ from core.domains import User
 from core.domains.DTO.predict_event import PredictEventSchemaOutput
 from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairs
 from core.filtering.predict_event_filter import PredictEventFiltering, PredictMajorRepairsFiltering
+from core.repositories.apartment_building_repository import ApartmentBuildingRepository
 from core.repositories.major_repairs_repository import PredictedMajorRepairsRepository
 from core.repositories.predict_event_repository import PredictEventRepository
-from infrastructure.dependencies import get_predict_event_repository, get_major_repairs_repository
+from infrastructure.dependencies import get_predict_event_repository, get_major_repairs_repository, \
+    get_apartment_building_repository
 from infrastructure.utils import get_current_user
 
 router = APIRouter()
@@ -31,3 +33,17 @@ async def major_repairs(
         major_repairs_repo: PredictedMajorRepairsRepository = Depends(get_major_repairs_repository)
 ):
     return await major_repairs_repo.get_list_major_repairs(filtering_fields)
+
+
+@router.get('/apartment_buildings-with_tec/{unom_id}')
+async def get_item_from_unom(
+        unom_id: int,
+        # user: User = Depends(get_current_user),
+        get_predict_event_repo: ApartmentBuildingRepository = Depends(get_apartment_building_repository)
+):
+    return await get_predict_event_repo.get_item(unom_id)
+
+
+@router.put('/apartment_buildings-with_tec/{unom_id}')
+async def update_unom_by_id():
+    ...
