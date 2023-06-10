@@ -15,7 +15,7 @@ class PredictedMajorRepairsRepository:
         query = select(
             MajorRepairsApartmentBuildingModel
         ).options(selectinload(MajorRepairsApartmentBuildingModel.unom)).join(
-            ApartmentBuildingsWithTEC, MajorRepairsApartmentBuildingModel.unom_id == ApartmentBuildingsWithTEC.unom)
+            ApartmentBuildingsWithTEC, MajorRepairsApartmentBuildingModel.unom_id == ApartmentBuildingsWithTEC.COL_782)
 
         if filtering_fields.dict(exclude_none=True):
             if filtering_fields.unom:

@@ -1,9 +1,10 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from core.const import MAPPED_PREDICT_EVENT_FIELDS, code_decipher
 from core.domains import PredictedEvent as PredictedEventModel, ApartmentBuildingsWithTEC
-from core.domains.DTO.predict_event import PredictEventSchemaOutput
+from core.domains.DTO.predict_event import PredictEventSchemaOutput, ItemEventSchemaOutput
 from core.filtering.predict_event_filter import PredictEventFiltering
 
 
@@ -13,7 +14,7 @@ class PredictEventRepository:
 
     async def get_list_events(self, filtering_fields: PredictEventFiltering):
         query = select(PredictedEventModel).options(selectinload(PredictedEventModel.unom)).join(
-            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.unom)
+            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.COL_782)
 
         if filtering_fields.dict(exclude_none=True):
             if filtering_fields.unom:
@@ -62,6 +63,7 @@ class PredictEventRepository:
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
         if predict_record:
+            material_roof_id = predict_record[0].unom.col_781
             response = PredictEventSchemaOutput(
                 unom=predict_record[0].unom_id,
                 # type=predict_record
@@ -70,7 +72,7 @@ class PredictEventRepository:
                 organization=predict_record[0].organization,
                 year=predict_record[0].unom.col_756,
                 warn=predict_record[0].unom.col_770,
-                materialRoof=predict_record[0].unom.col_781,
+                materialRoof=code_decipher['Материал стен'][material_roof_id],
                 materialWall=predict_record[0].unom.col_769,
                 fond=predict_record[0].unom.col_2463,
                 mkd=predict_record[0].unom.col_103506,
@@ -83,13 +85,13 @@ class PredictEventRepository:
 
     async def get_item_predict_event_by_unom_id(self, unom_id: int):
         query = select(PredictedEventModel).options(selectinload(PredictedEventModel.unom)).join(
-            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.unom)
+            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.COL_782)
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
         if not predict_record:
             return []
 
-        response = PredictEventSchemaOutput(
+        response = ItemEventSchemaOutput(
             unom=predict_record[0].unom_id,
             # type=predict_record
             date=predict_record[0].expected_date,
@@ -105,3 +107,14 @@ class PredictEventRepository:
 
         )
         return response
+
+    async def update_item_by_unom_id(self, unom_id: int, item_update):
+        to_update = {}
+        dict_item_update = item_update.dict(exclude_none=True)
+        for key in dict_item_update:
+            to_update[MAPPED_PREDICT_EVENT_FIELDS[key]] = dict_item_update[key]
+        query = update(PredictedEventModel).values(**to_update)
+        await self._session.execute(query)
+        await self._session.commit()
+        updated_item = await self.get_item_predict_event_by_unom_id(unom_id)
+        return updated_item

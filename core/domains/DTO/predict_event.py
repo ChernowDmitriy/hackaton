@@ -17,3 +17,11 @@ class PredictEventSchemaOutput(BaseModel):
     fond: typing.Optional[str]
     mkd: typing.Optional[str]
     statusMkd: typing.Optional[str]
+
+
+class ItemEventSchemaOutput(BaseModel):
+    pass
+
+
+class UpdateItemSchemaOutput(BaseModel):
+    pass

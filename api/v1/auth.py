@@ -26,13 +26,13 @@ async def auth(
 
     now = datetime.utcnow()
     access_token_payload = {
-        'sub': user.id,
+        'sub': user.ID,
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
     }
     refresh_token_payload = {
-        'sub': user.id,
+        'sub': user.ID,
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES),
@@ -61,14 +61,14 @@ async def sign_up(
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
-        'user': user.id
+        'user': user.ID
     }
     refresh_token_payload = {
         'sub': 'auth',
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES),
-        'user': user.id
+        'user': user.ID
     }
 
     access_token = encode_token(access_token_payload)
@@ -93,14 +93,14 @@ async def refresh_tokens(
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
-        'user': user.id
+        'user': user.ID
     }
     refresh_token_payload = {
         'sub': 'auth',
         'iat': now,
         'nbf': now,
         'exp': now + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES),
-        'user': user.id
+        'user': user.ID
     }
     access_token = encode_token(access_token_payload)
     refresh_token = encode_token(refresh_token_payload)

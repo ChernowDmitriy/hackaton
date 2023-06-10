@@ -12,7 +12,7 @@ class MajorRepairsApartmentBuilding(ORMBaseModel):
 
     __tablename__ = 'MajorRepairsApartmentBuilding'
 
-    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    ID = sa.Column(sa.Integer, primary_key=True, index=True, unique=True)
 
     global_id = sa.Column(sa.Integer)
     period = sa.Column(sa.SmallInteger)
@@ -26,5 +26,5 @@ class MajorRepairsApartmentBuilding(ORMBaseModel):
     adm_area = sa.Column(sa.String)
     district = sa.Column(sa.String)
     address = sa.Column(sa.String)
-    unom_id = sa.Column(sa.Integer, sa.ForeignKey('ApartmentBuildingsWithTEC.unom'))
+    unom_id = sa.Column(sa.Integer, sa.ForeignKey('ApartmentBuildingsWithTEC.COL_782'))
     unom = relationship('ApartmentBuildingsWithTEC', backref='MajorRepairsApartmentBuilding')

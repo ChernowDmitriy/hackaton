@@ -12,7 +12,7 @@ class UserRepository:
         self._session = session
 
     async def get_user_by_id(self, user_id: Union[UUID, str]) -> UserModel:
-        result = await self._session.execute(select(UserModel).where(UserModel.id == user_id))
+        result = await self._session.execute(select(UserModel).where(UserModel.ID == user_id))
         user_record = result.scalars().first()
         return UserModel(**user_record.to_dict()) if user_record else None
 

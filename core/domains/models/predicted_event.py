@@ -13,8 +13,8 @@ class PredictedEvent(ORMBaseModel):
 
     __tablename__ = 'PredictedEvent'
 
-    id = sa.Column(sa.Integer, primary_key=True, index=True)
-    unom_id = sa.Column(sa.Integer, sa.ForeignKey('ApartmentBuildingsWithTEC.unom'))
+    ID = sa.Column(sa.Integer, primary_key=True, index=True, unique=True)
+    unom_id = sa.Column(sa.Integer, sa.ForeignKey('ApartmentBuildingsWithTEC.COL_782'))
     unom = relationship('ApartmentBuildingsWithTEC', backref='PredictedEvent')
 
     name = sa.Column(sa.String)

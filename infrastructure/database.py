@@ -26,7 +26,7 @@ _async_scoped_session = async_scoped_session(async_session, scopefunc=lambda: No
 class ORMBaseModel(BaseModel):
     __abstract__ = True
 
-    id = sa.Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    ID = sa.Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
 
     created_at = sa.Column(sa.DateTime, default=datetime.datetime.now())
     updated_at = sa.Column(sa.DateTime, default=datetime.datetime.now())
@@ -36,5 +36,5 @@ class ORMBaseModel(BaseModel):
         for field in self.__dict__:
             if not field.startswith('_'):
                 res[field] = self.__dict__[field]
-        res['id'] = str(res['id'])
+        res['ID'] = str(res['ID'])
         return res

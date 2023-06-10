@@ -13,7 +13,7 @@ class IncidentsRegisteredAtMunicipalFacilities(ORMBaseModel):
 
     __tablename__ = 'IncidentsRegisteredAtMunicipalFacilities'
 
-    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    ID = sa.Column(sa.Integer, primary_key=True, index=True, unique=True)
 
     name = sa.Column(sa.String)
     source = sa.Column(sa.String)

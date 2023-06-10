@@ -11,7 +11,8 @@ class WorkTypeOverhaulBuildingApartment(ORMBaseModel):
 
     __tablename__ = 'WorkTypeOverhaulBuildApart'
 
-    id = sa.Column(sa.Integer, primary_key=True, index=True)
+    ID = sa.Column(sa.Integer, primary_key=True, index=True, unique=True)
+
     code = sa.Column(sa.SmallInteger)
     name = sa.Column(sa.String)
     common_property_name = sa.Column(sa.String)
