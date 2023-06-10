@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from core.const import code_decipher
 from core.domains import MajorRepairsApartmentBuilding as MajorRepairsApartmentBuildingModel, ApartmentBuildingsWithTEC
 from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairs
 from core.filtering.predict_event_filter import PredictMajorRepairsFiltering
@@ -64,21 +65,21 @@ class PredictedMajorRepairsRepository:
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
         if predict_record:
-            response = PredictedMajorRepairs(
-                unom=predict_record[0].unom_id,
-                # type=predict_record
-                date=predict_record[0].expected_date,
-                duration=predict_record[0].expected_duration,
-                organization=predict_record[0].organization,
-                year=predict_record[0].unom.col_756,
-                warn=predict_record[0].unom.col_770,
-                materialRoof=predict_record[0].unom.col_781,
-                materialWall=predict_record[0].unom.col_769,
-                fond=predict_record[0].unom.col_2463,
-                mkd=predict_record[0].unom.col_103506,
-                statusMkd=predict_record[0].unom.col_3243,
-
-            )
+            response = [
+                PredictedMajorRepairs(
+                    unom=record.unom_id,
+                    type=record.name,
+                    date=record.expected_date,
+                    duration=record.expected_duration,
+                    year=record.unom.COL_756,
+                    warn=code_decipher['Признак аварийности здания'].get(record.unom.COL_770),
+                    materialRoof=code_decipher['Материал кровли'].get(record.unom.COL_781),
+                    materialWall=code_decipher['Материал стен'].get(record.unom.COL_769),
+                    fond=code_decipher['Тип жилищного фонда'].get(record.unom.COL_2463),
+                    mkd=code_decipher['Статус МКД'].get(record.unom.COL_103506),
+                    statusMkd=code_decipher['Статус управления МКД'].get(record.unom.COL_3243)
+                ) for record in predict_record
+            ]
             return response
 
         return []

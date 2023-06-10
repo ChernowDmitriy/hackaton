@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class PredictedMajorRepairs(BaseModel):
     unom: typing.Optional[int]
-    # type: typing.Optional[str]
+    type: typing.Optional[str]
     date: typing.Optional[datetime.datetime]  # Ожидаемая дата починки
     duration: typing.Optional[str]  # Ожидаемая продолжительность выполнения
     year: typing.Optional[int]
