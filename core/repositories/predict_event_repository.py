@@ -4,7 +4,7 @@ from sqlalchemy.orm import selectinload
 
 from core.const import MAPPED_PREDICT_EVENT_FIELDS, code_decipher
 from core.domains import PredictedEvent as PredictedEventModel, ApartmentBuildingsWithTEC
-from core.domains.DTO.predict_event import PredictEventSchemaOutput, ItemEventSchemaOutput
+from core.domains.DTO.predict_event import PredictEventSchemaOutput, ItemEventSchemaOutput, UpdateItemSchemaOutput
 from core.filtering.predict_event_filter import PredictEventFiltering
 
 
@@ -85,30 +85,34 @@ class PredictEventRepository:
 
     async def get_item_predict_event_by_unom_id(self, unom_id: int):
         query = select(PredictedEventModel).options(selectinload(PredictedEventModel.unom)).join(
-            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.COL_782)
+            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.COL_782).where(
+            PredictedEventModel.unom_id == unom_id
+        )
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
+
         if not predict_record:
             return []
 
-        response = ItemEventSchemaOutput(
-            unom=predict_record[0].unom_id,
-            # type=predict_record
-            date=predict_record[0].expected_date,
-            duration=predict_record[0].expected_duration,
-            organization=predict_record[0].organization,
-            year=predict_record[0].unom.COL_756,
-            warn=predict_record[0].unom.COL_770,
-            materialRoof=predict_record[0].unom.COL_781,
-            materialWall=predict_record[0].unom.COL_769,
-            fond=predict_record[0].unom.COL_2463,
-            mkd=predict_record[0].unom.COL_103506,
-            statusMkd=predict_record[0].unom.COL_3243,
-
-        )
+        response = [
+            ItemEventSchemaOutput(
+                unom=record.unom_id,
+                # type=predict_record
+                date=record.expected_date,
+                duration=record.expected_duration,
+                organization=record.organization,
+                year=record.unom.COL_756,
+                warn=record.unom.COL_770,
+                materialRoof=record.unom.COL_781,
+                materialWall=record.unom.COL_769,
+                fond=record.unom.COL_2463,
+                mkd=record.unom.COL_103506,
+                statusMkd=record.unom.COL_3243,
+            ) for record in predict_record
+        ]
         return response
 
-    async def update_item_by_unom_id(self, unom_id: int, item_update):
+    async def update_item_by_unom_id(self, unom_id: int, item_update: UpdateItemSchemaOutput):
         to_update = {}
         dict_item_update = item_update.dict(exclude_none=True)
         for key in dict_item_update:

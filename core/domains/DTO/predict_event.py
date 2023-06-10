@@ -19,9 +19,10 @@ class PredictEventSchemaOutput(BaseModel):
     statusMkd: typing.Optional[str]
 
 
-class ItemEventSchemaOutput(BaseModel):
+class ItemEventSchemaOutput(PredictEventSchemaOutput):
     pass
 
 
 class UpdateItemSchemaOutput(BaseModel):
-    pass
+    date: typing.Optional[datetime.datetime]  # Ожидаемая дата починки
+    duration: typing.Optional[str]
