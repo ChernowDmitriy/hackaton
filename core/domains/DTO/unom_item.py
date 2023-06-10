@@ -20,7 +20,7 @@ class ItemUnomSchemaOutput(BaseModel):
     a_sign_of_a_building_accident: typing.Optional[int]
     apartments_number: typing.Optional[int]
     materialRoof: typing.Optional[int]
-    mcd_management_status: typing.Optional[int]
+    mcd_management_status: typing.Union[int, str]
     appointment: typing.Optional[str]
     the_order_of_roof_cleaning: typing.Optional[int]
     construction_volume: typing.Optional[int]

@@ -1,6 +1,8 @@
+from typing import List
+
 from fastapi import APIRouter, Depends
 
-from core.domains.DTO.predict_event import UpdateItemSchemaOutput
+from core.domains.DTO.predict_event import UpdateItemSchemaOutput, ItemEventSchemaOutput
 from core.filtering.predict_event_filter import PredictEventFiltering
 from core.repositories.predict_event_repository import PredictEventRepository
 from infrastructure.dependencies import get_predict_event_repository
@@ -23,7 +25,7 @@ async def item_predict_events(
         unom_id: int,
         # user: User = Depends(get_current_user),
         predict_event_repo: PredictEventRepository = Depends(get_predict_event_repository),
-):
+) -> List[ItemEventSchemaOutput]:
     return await predict_event_repo.get_item_predict_event_by_unom_id(unom_id)
 
 
