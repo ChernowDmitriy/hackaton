@@ -25,4 +25,4 @@ class ItemEventSchemaOutput(PredictEventSchemaOutput):
 
 class UpdateItemSchemaOutput(BaseModel):
     date: typing.Optional[datetime.datetime]  # Ожидаемая дата починки
-    duration: typing.Optional[str]
+    duration: typing.Optional[int]

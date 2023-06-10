@@ -30,10 +30,10 @@ MAPPED_APARTMENT_FIELDS = {
 
 
 MAPPED_PREDICT_EVENT_FIELDS = {
-    # 'type': '',
-    'date': '',
-    'duration': '',
-    'organization': '',
+    'type': 'name',
+    'date': 'expected_date',
+    'duration': 'expected_duration',
+    'organization': 'organization',
     'year': 'COL_756',
     'warn': '770',
     'materialRoof': 'COL_781',
