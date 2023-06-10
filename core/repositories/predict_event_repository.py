@@ -60,7 +60,7 @@ class PredictEventRepository:
             if filtering_fields.statusMkd:
                 query = query.where()
 
-        result = await self._session.execute(query)
+        result = await self._session.execute(query.limit(30))
         predict_record = result.scalars().all()
         if predict_record:
             material_roof_id = predict_record[0].unom.COL_781
