@@ -80,3 +80,28 @@ class PredictEventRepository:
             return response
 
         return []
+
+    async def get_item_predict_event_by_unom_id(self, unom_id: int):
+        query = select(PredictedEventModel).options(selectinload(PredictedEventModel.unom)).join(
+            ApartmentBuildingsWithTEC, PredictedEventModel.unom_id == ApartmentBuildingsWithTEC.unom)
+        result = await self._session.execute(query)
+        predict_record = result.scalars().all()
+        if not predict_record:
+            return []
+
+        response = PredictEventSchemaOutput(
+            unom=predict_record[0].unom_id,
+            # type=predict_record
+            date=predict_record[0].expected_date,
+            duration=predict_record[0].expected_duration,
+            organization=predict_record[0].organization,
+            year=predict_record[0].unom.col_756,
+            warn=predict_record[0].unom.col_770,
+            materialRoof=predict_record[0].unom.col_781,
+            materialWall=predict_record[0].unom.col_769,
+            fond=predict_record[0].unom.col_2463,
+            mkd=predict_record[0].unom.col_103506,
+            statusMkd=predict_record[0].unom.col_3243,
+
+        )
+        return response

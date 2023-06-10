@@ -27,6 +27,15 @@ async def predict_events(
     return result
 
 
+@router.get("/predict_events/{unom_id}")
+async def item_predict_events(
+        unom_id: int,
+        # user: User = Depends(get_current_user),
+        predict_event_repo: PredictEventRepository = Depends(get_predict_event_repository),
+):
+    return await predict_event_repo.get_item_predict_event_by_unom_id(unom_id)
+
+
 @router.get("/major_repairs", response_model=List[PredictedMajorRepairs])
 async def major_repairs(
         filtering_fields: PredictMajorRepairsFiltering = Depends(),
