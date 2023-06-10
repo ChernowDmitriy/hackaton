@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairs
+from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairsSchemaOutput
 from core.filtering.predict_event_filter import PredictMajorRepairsFiltering
 from core.repositories.major_repairs_repository import PredictedMajorRepairsRepository
 from infrastructure.dependencies import get_major_repairs_repository
@@ -10,7 +10,7 @@ from infrastructure.dependencies import get_major_repairs_repository
 router = APIRouter()
 
 
-@router.get("/major_repairs", response_model=List[PredictedMajorRepairs])
+@router.get("/major_repairs", response_model=List[PredictedMajorRepairsSchemaOutput])
 async def major_repairs(
         filtering_fields: PredictMajorRepairsFiltering = Depends(),
         # user: User = Depends(get_current_user),

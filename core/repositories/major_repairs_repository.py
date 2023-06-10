@@ -3,8 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from core.const import code_decipher
-from core.domains import MajorRepairsApartmentBuilding as MajorRepairsApartmentBuildingModel, ApartmentBuildingsWithTEC
-from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairs
+from core.domains import MajorRepairsApartmentBuilding as MajorRepairsApartmentBuildingModel, ApartmentBuildingsWithTEC, \
+    PredictedMajorRepairs
+from core.domains.DTO.predicted_major_repairs import PredictedMajorRepairsSchemaOutput
 from core.filtering.predict_event_filter import PredictMajorRepairsFiltering
 
 
@@ -14,10 +15,11 @@ class PredictedMajorRepairsRepository:
 
     async def get_list_major_repairs(self, filtering_fields: PredictMajorRepairsFiltering):
         query = select(
-            MajorRepairsApartmentBuildingModel
-        ).options(selectinload(MajorRepairsApartmentBuildingModel.unom)).join(
-            ApartmentBuildingsWithTEC, MajorRepairsApartmentBuildingModel.unom_id == ApartmentBuildingsWithTEC.COL_782)
-
+            PredictedMajorRepairs
+        ).options(selectinload(PredictedMajorRepairs.unom)).join(
+            ApartmentBuildingsWithTEC,
+            PredictedMajorRepairs.unom_id == ApartmentBuildingsWithTEC.COL_782
+        ).limit(100)
         if filtering_fields.dict(exclude_none=True):
             if filtering_fields.unom:
                 query = query.where(MajorRepairsApartmentBuildingModel.unom_id == filtering_fields.unom)
@@ -66,7 +68,7 @@ class PredictedMajorRepairsRepository:
         predict_record = result.scalars().all()
         if predict_record:
             response = [
-                PredictedMajorRepairs(
+                PredictedMajorRepairsSchemaOutput(
                     unom=record.unom_id,
                     type=record.name,
                     date=record.expected_date,

@@ -4,7 +4,7 @@ import typing
 from pydantic import BaseModel
 
 
-class PredictedMajorRepairs(BaseModel):
+class PredictedMajorRepairsSchemaOutput(BaseModel):
     unom: typing.Optional[int]
     type: typing.Optional[str]
     date: typing.Optional[datetime.datetime]  # Ожидаемая дата починки
