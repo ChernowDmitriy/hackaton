@@ -60,24 +60,23 @@ class PredictEventRepository:
             if filtering_fields.statusMkd:
                 query = query.where()
 
-        result = await self._session.execute(query.limit(30))
+        result = await self._session.execute(query.limit(500))
         predict_record = result.scalars().all()
         if predict_record:
-            material_roof_id = predict_record[0].unom.COL_781
             response = [
                 PredictEventSchemaOutput(
                     unom=record.unom_id,
-                    # type=predict_record
+                    type=record.name,
                     date=record.expected_date,
                     duration=record.expected_duration,
                     organization=record.organization,
                     year=record.unom.COL_756,
-                    warn=record.unom.COL_770,
-                    materialRoof=code_decipher['Материал кровли'][material_roof_id],
-                    materialWall=record.unom.COL_769,
-                    fond=record.unom.COL_2463,
-                    mkd=record.unom.COL_103506,
-                    statusMkd=record.unom.COL_3243
+                    warn=code_decipher['Признак аварийности здания'].get(record.unom.COL_770),
+                    materialRoof=code_decipher['Материал кровли'].get(record.unom.COL_781),
+                    materialWall=code_decipher['Материал стен'].get(record.unom.COL_769),
+                    fond=code_decipher['Тип жилищного фонда'].get(record.unom.COL_2463),
+                    mkd=code_decipher['Статус МКД'].get(record.unom.COL_103506),
+                    statusMkd=code_decipher['Статус управления МКД'].get(record.unom.COL_3243)
                 ) for record in predict_record
             ]
             return response
@@ -97,17 +96,17 @@ class PredictEventRepository:
         response = [
             ItemEventSchemaOutput(
                 unom=record.unom_id,
-                # type=predict_record
+                type=record.name,
                 date=record.expected_date,
                 duration=record.expected_duration,
                 organization=record.organization,
                 year=record.unom.COL_756,
-                warn=record.unom.COL_770,
-                materialRoof=record.unom.COL_781,
-                materialWall=record.unom.COL_769,
-                fond=record.unom.COL_2463,
-                mkd=record.unom.COL_103506,
-                statusMkd=record.unom.COL_3243,
+                warn=code_decipher['Признак аварийности здания'].get(record.unom.COL_770),
+                materialRoof=code_decipher['Материал кровли'].get(record.unom.COL_781),
+                materialWall=code_decipher['Материал стен'].get(record.unom.COL_769),
+                fond=code_decipher['Тип жилищного фонда'].get(record.unom.COL_2463),
+                mkd=code_decipher['Статус МКД'].get(record.unom.COL_103506),
+                statusMkd=code_decipher['Статус управления МКД'].get(record.unom.COL_3243)
             ) for record in predict_record
         ]
         return response

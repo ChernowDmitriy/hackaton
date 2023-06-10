@@ -11,5 +11,5 @@ router = APIRouter()
 
 router.include_router(auth.router)
 router.include_router(user.router)
-router.include_router(predict_event_and_major_repair.router)
+router.include_router(major_repairs.router)
 router.include_router(predict_events.router)
