@@ -27,7 +27,7 @@ class PredictEventRepository:
                 query = query.filter(ApartmentBuildingsWithTEC.name.ilike(f"%{filtering_fields.address}%"))
 
             if filtering_fields.project_series:
-                query = query.where(ApartmentBuildingsWithTEC.col_758 == int(filtering_fields.project_series))
+                query = query.where(ApartmentBuildingsWithTEC.COL_758 == int(filtering_fields.project_series))
 
             if filtering_fields.start_expected_duration and filtering_fields.end_expected_duration:
                 cleft = int(filtering_fields.start_expected_duration)
@@ -47,8 +47,8 @@ class PredictEventRepository:
                 cleft = int(filtering_fields.start_construction_year)
                 cright = int(filtering_fields.end_construction_year)
                 query = query.where(
-                    (ApartmentBuildingsWithTEC.col_756 >= cleft) &
-                    (ApartmentBuildingsWithTEC.col_756 <= cright)
+                    (ApartmentBuildingsWithTEC.COL_756 >= cleft) &
+                    (ApartmentBuildingsWithTEC.COL_756 <= cright)
                 )
 
             if filtering_fields.warn:
@@ -63,24 +63,24 @@ class PredictEventRepository:
         result = await self._session.execute(query)
         predict_record = result.scalars().all()
         if predict_record:
-            material_roof_id = predict_record[0].unom.col_781
-            response = PredictEventSchemaOutput(
-                unom=predict_record[0].unom_id,
-                # type=predict_record
-                date=predict_record[0].expected_date,
-                duration=predict_record[0].expected_duration,
-                organization=predict_record[0].organization,
-                year=predict_record[0].unom.col_756,
-                warn=predict_record[0].unom.col_770,
-                materialRoof=code_decipher['Материал стен'][material_roof_id],
-                materialWall=predict_record[0].unom.col_769,
-                fond=predict_record[0].unom.col_2463,
-                mkd=predict_record[0].unom.col_103506,
-                statusMkd=predict_record[0].unom.col_3243,
-
-            )
+            material_roof_id = predict_record[0].unom.COL_781
+            response = [
+                PredictEventSchemaOutput(
+                    unom=record.unom_id,
+                    # type=predict_record
+                    date=record.expected_date,
+                    duration=record.expected_duration,
+                    organization=record.organization,
+                    year=record.unom.COL_756,
+                    warn=record.unom.COL_770,
+                    materialRoof=code_decipher['Материал кровли'][material_roof_id],
+                    materialWall=record.unom.COL_769,
+                    fond=record.unom.COL_2463,
+                    mkd=record.unom.COL_103506,
+                    statusMkd=record.unom.COL_3243
+                ) for record in predict_record
+            ]
             return response
-
         return []
 
     async def get_item_predict_event_by_unom_id(self, unom_id: int):
@@ -97,13 +97,13 @@ class PredictEventRepository:
             date=predict_record[0].expected_date,
             duration=predict_record[0].expected_duration,
             organization=predict_record[0].organization,
-            year=predict_record[0].unom.col_756,
-            warn=predict_record[0].unom.col_770,
-            materialRoof=predict_record[0].unom.col_781,
-            materialWall=predict_record[0].unom.col_769,
-            fond=predict_record[0].unom.col_2463,
-            mkd=predict_record[0].unom.col_103506,
-            statusMkd=predict_record[0].unom.col_3243,
+            year=predict_record[0].unom.COL_756,
+            warn=predict_record[0].unom.COL_770,
+            materialRoof=predict_record[0].unom.COL_781,
+            materialWall=predict_record[0].unom.COL_769,
+            fond=predict_record[0].unom.COL_2463,
+            mkd=predict_record[0].unom.COL_103506,
+            statusMkd=predict_record[0].unom.COL_3243,
 
         )
         return response

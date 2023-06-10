@@ -17,7 +17,7 @@ from infrastructure.utils import get_current_user
 router = APIRouter()
 
 
-@router.get("/predict_events", response_model=List[PredictEventSchemaOutput])
+@router.get("/predict_events")
 async def predict_events(
         filtering_fields: PredictEventFiltering = Depends(),
         # user: User = Depends(get_current_user),
