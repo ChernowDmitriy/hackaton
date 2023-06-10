@@ -1,8 +1,9 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.const import MAPPED_APARTMENT_FIELDS
 from core.domains import ApartmentBuildingsWithTEC
-from core.domains.DTO.unom_item import ItemUnomSchemaOutput
+from core.domains.DTO.unom_item import ItemUnomSchemaOutput, UpdateItemUnomSchemaOutput
 
 
 class ApartmentBuildingRepository:
@@ -45,3 +46,14 @@ class ApartmentBuildingRepository:
             energy_efficiency_class=result[0].col_767,
         )
         return response
+
+    async def update_item_by_unom_id(self, unom_id, item_update: UpdateItemUnomSchemaOutput):
+        to_update = {}
+        dict_item_update = item_update.dict(exclude_none=True)
+        for key in dict_item_update:
+            to_update[MAPPED_APARTMENT_FIELDS[key]] = dict_item_update[key]
+        query = update(ApartmentBuildingsWithTEC).values(**to_update)
+        await self._session.execute(query)
+        await self._session.commit()
+        updated_item = await self.get_item(unom_id)
+        return updated_item
